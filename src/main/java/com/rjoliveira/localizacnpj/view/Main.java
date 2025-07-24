@@ -9,6 +9,8 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.rjoliveira.localizacnpj.model.Empresa;
 import com.rjoliveira.localizacnpj.service.EmpresaFetcher;
 import java.text.SimpleDateFormat;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Main extends javax.swing.JFrame {
     
-    DefaultTableModel tblModel = new DefaultTableModel(new Object[]{"Nome","CEP","Logradouro","Data Abertura"},0);
+    DefaultTableModel tblModel = new DefaultTableModel(new Object[]{"Nome", "CEP", "Logradouro", "Data Abertura"}, 0);
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Main.class.getName());
 
     /**
@@ -25,6 +27,12 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents();
+        setCustomIcon();
+    }
+
+    public void setCustomIcon() {
+        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/escritorio.png"));
+        this.setIconImage(icon.getImage());
     }
 
     /**
@@ -46,16 +54,20 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Consulta CNPJ");
         setAlwaysOnTop(true);
-        setPreferredSize(new java.awt.Dimension(600, 300));
 
+        txtCNPJ.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
         txtCNPJ.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCNPJActionPerformed(evt);
             }
         });
 
+        lblCNPJ.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         lblCNPJ.setText("CNPJ:");
+        lblCNPJ.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        btnPesquisar.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/carteira-de-identidade.png"))); // NOI18N
         btnPesquisar.setText("Pesquisar");
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -75,8 +87,12 @@ public class Main extends javax.swing.JFrame {
 
             }
         ));
+        tblDados.setEnabled(false);
+        tblDados.setFocusable(false);
         jScrollPane1.setViewportView(tblDados);
 
+        btnLimpar.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/protecao.png"))); // NOI18N
         btnLimpar.setText("Limpar");
         btnLimpar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,18 +104,21 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblCNPJ)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(lblCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnPesquisar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnLimpar)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnLimpar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -107,29 +126,38 @@ public class Main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCNPJ)
+                    .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPesquisar)
-                    .addComponent(btnLimpar))
+                    .addComponent(btnLimpar)
+                    .addComponent(lblCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        pesquisarCNPJ();
+        try {
+            pesquisarCNPJ();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Erro na pesquisa do CNPJ. \n" + e);
+        }
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-
-            tblModel.setRowCount(0);
+        
+        tblModel.setRowCount(0);
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void txtCNPJActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCNPJActionPerformed
-        pesquisarCNPJ();
+        try {
+            pesquisarCNPJ();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Erro na pesquisa do CNPJ. \n" + e);
+        }
     }//GEN-LAST:event_txtCNPJActionPerformed
 
     /**
@@ -151,19 +179,19 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextField txtCNPJ;
     // End of variables declaration//GEN-END:variables
 
-
-    public void pesquisarCNPJ(){
+    public void pesquisarCNPJ() {
         
-           try {
-               EmpresaFetcher dataFetcher = new EmpresaFetcher();
-               Empresa emp = dataFetcher.fetchData(txtCNPJ.getText());
-               System.out.println(txtCNPJ.getText());
-               SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
-               String dataFormatada = dtFormat.format(emp.getDataAbertura());
-               System.out.println("Os dados são: "+emp.getRazaoSocial()+" "+emp.getCep());
-               Object[] rowData = {emp.getRazaoSocial(),emp.getCep(),emp.getTipoLogradouro()+" "+emp.getLogradouro()+" - "+emp.getNumero(),dataFormatada};
-               tblModel.addRow(rowData);
-               tblDados.setModel(tblModel);
+        try {
+            EmpresaFetcher dataFetcher = new EmpresaFetcher();
+            Empresa emp = dataFetcher.fetchData(txtCNPJ.getText());
+            System.out.println(txtCNPJ.getText());
+            SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String dataFormatada = dtFormat.format(emp.getDataAbertura());
+            System.out.println("Os dados são: " + emp.getRazaoSocial() + " " + emp.getCep());
+            Object[] rowData = {emp.getRazaoSocial(), emp.getCep(), emp.getTipoLogradouro() + " " + emp.getLogradouro() + " - " + emp.getNumero(), dataFormatada};
+            tblModel.addRow(rowData);
+            tblDados.setModel(tblModel);
+            txtCNPJ.setText("");
         } catch (Exception e) {
         }
     }
