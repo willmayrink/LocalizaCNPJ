@@ -4,6 +4,10 @@
  */
 package com.rjoliveira.localizacnpj.view;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.text.SimpleDateFormat;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.rjoliveira.localizacnpj.model.Empresa;
@@ -18,8 +22,8 @@ import javax.swing.table.DefaultTableModel;
  * @author laura
  */
 public class Main extends javax.swing.JFrame {
-    
-    DefaultTableModel tblModel = new DefaultTableModel(new Object[]{"Nome", "CEP", "Logradouro", "Data Abertura"}, 0);
+
+    DefaultTableModel tblModel = new DefaultTableModel(new Object[]{"Nome", "CEP", "Logradouro", "Data Abertura", "Situação cadastral"}, 0);
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Main.class.getName());
 
     /**
@@ -59,6 +63,14 @@ public class Main extends javax.swing.JFrame {
         txtCNPJ.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCNPJActionPerformed(evt);
+            }
+        });
+        txtCNPJ.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCNPJKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCNPJKeyTyped(evt);
             }
         });
 
@@ -125,11 +137,12 @@ public class Main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPesquisar)
-                    .addComponent(btnLimpar)
-                    .addComponent(lblCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblCNPJ, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPesquisar)
+                        .addComponent(btnLimpar)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(7, Short.MAX_VALUE))
@@ -148,7 +161,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        
+
         tblModel.setRowCount(0);
     }//GEN-LAST:event_btnLimparActionPerformed
 
@@ -159,6 +172,14 @@ public class Main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Erro na pesquisa do CNPJ. \n" + e);
         }
     }//GEN-LAST:event_txtCNPJActionPerformed
+
+    private void txtCNPJKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCNPJKeyTyped
+
+    }//GEN-LAST:event_txtCNPJKeyTyped
+
+    private void txtCNPJKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCNPJKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCNPJKeyPressed
 
     /**
      * @param args the command line arguments
@@ -180,19 +201,63 @@ public class Main extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     public void pesquisarCNPJ() {
-        
         try {
+            // Certifique-se de que a tabela está inicializada com o modelo
+            if (tblDados.getModel() != tblModel) {
+                tblDados.setModel(tblModel); // Associa o modelo à tabela, se ainda não estiver
+            }
+
             EmpresaFetcher dataFetcher = new EmpresaFetcher();
             Empresa emp = dataFetcher.fetchData(txtCNPJ.getText());
             System.out.println(txtCNPJ.getText());
             SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
             String dataFormatada = dtFormat.format(emp.getDataAbertura());
             System.out.println("Os dados são: " + emp.getRazaoSocial() + " " + emp.getCep());
-            Object[] rowData = {emp.getRazaoSocial(), emp.getCep(), emp.getTipoLogradouro() + " " + emp.getLogradouro() + " - " + emp.getNumero(), dataFormatada};
+
+            // Dados da linha
+            Object[] rowData = {
+                emp.getRazaoSocial(),
+                emp.getCep(),
+                emp.getTipoLogradouro() + " " + emp.getLogradouro() + " - " + emp.getNumero(),
+                dataFormatada,
+                emp.getSituacaoCadastral() // Passa a situação cadastral diretamente
+            };
+
+            // Adiciona a linha ao modelo
             tblModel.addRow(rowData);
-            tblDados.setModel(tblModel);
+
+            // Configura o renderizador para a coluna "Situação Cadastral" (índice 4)
+            tblDados.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                    // Verifica se o valor é "Ativa"
+                    if (value != null && value.toString().equalsIgnoreCase("Ativa")) {
+                        // Carrega o ícone de check
+                        ImageIcon checkIcon = new ImageIcon(getClass().getResource("/icons/verify.png"));
+                        // Redimensiona o ícone, se necessário
+                        Image img = checkIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+                        checkIcon = new ImageIcon(img);
+
+                        // Define o texto e o ícone
+                        label.setText("Ativa");
+                        label.setIcon(checkIcon);
+                        label.setHorizontalTextPosition(SwingConstants.LEFT); // Ícone à direita do texto
+                    } else {
+                        // Caso não seja "Ativa", exibe apenas o texto
+                        label.setText(value != null ? value.toString() : "");
+                        label.setIcon(null);
+                    }
+
+                    return label;
+                }
+            });
+
             txtCNPJ.setText("");
         } catch (Exception e) {
+            e.printStackTrace(); // Loga a exceção para depuração
+            JOptionPane.showMessageDialog(null, "Erro ao consultar CNPJ: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -34,6 +34,7 @@ public class Empresa {
     
     @JsonProperty("descricao_tipo_de_logradouro")
     private String tipoLogradouro;
+    
 
     public String getTipoLogradouro() {
         return tipoLogradouro;
