@@ -2,6 +2,9 @@
 
 Welcome to **LocalizaCNPJ**, a slick Java GUI app that lets you query Brazilian CNPJ data with ease! Powered by the [BrasilAPI](https://brasilapi.com.br/docs), this app fetches key details like company name, opening date, address, and postal code in a snap. Perfect for developers, entrepreneurs, or anyone curious about Brazilian businesses! 😎
 
+
+<img src="snapshot.jpg" style="align-items:center;justify-content:center;display:flex;">
+
 ## 🎯 Features
 - **CNPJ Lookup**: Enter a valid CNPJ and get instant info! 📊
 - **Data Display**: Shows company details like:
